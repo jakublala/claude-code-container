@@ -18,15 +18,14 @@ WORKDIR /home/claude
 # Install Claude Code
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
-# Switch back to root to create system-wide symlink
+# Switch back to root to fix permissions and create symlink
 USER root
 
-# Create symlink in /usr/local/bin so claude is available system-wide
+# Make claude's home directory and the binary accessible to all users
 # This is needed for Apptainer which runs as the host user, not the container user
-RUN ln -s /home/claude/.local/bin/claude /usr/local/bin/claude
-
-# Switch back to claude user
-USER claude
+RUN chmod 755 /home/claude && \
+    chmod -R 755 /home/claude/.local && \
+    ln -s /home/claude/.local/bin/claude /usr/local/bin/claude
 
 # Set default command
 CMD ["claude"]
