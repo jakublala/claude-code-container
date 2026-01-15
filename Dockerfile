@@ -18,8 +18,9 @@ WORKDIR /home/claude
 # Install Claude Code
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
-# Add Claude to PATH
-ENV PATH="/home/claude/.claude/local/bin:${PATH}"
+# Add Claude to PATH (both ENV for Docker and .bashrc for Apptainer shell)
+ENV PATH="/home/claude/.local/bin:${PATH}"
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/claude/.bashrc
 
 # Set default command
 CMD ["claude"]
